@@ -5,17 +5,20 @@
  */
 package procesos;
 
+import graficos.VentanaPrincipal;
+
 /**
  *
  * @author Dougl
  */
-public class Motor_Inicio {
+public class Motor_Inicio{
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        VentanaPrincipal VMain= new VentanaPrincipal();
     }
     
 }
