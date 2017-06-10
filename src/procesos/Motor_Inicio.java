@@ -19,6 +19,7 @@ public class Motor_Inicio{
     public static void main(String[] args) {
         // TODO code application logic here
         VentanaPrincipal VMain= new VentanaPrincipal();
+        VMain.iniciar();
     }
     
 }

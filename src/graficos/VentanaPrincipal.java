@@ -25,7 +25,10 @@ public class VentanaPrincipal extends Canvas implements Runnable{
     private final Toolkit T1= Toolkit.getDefaultToolkit();
     private Dimension D1;
     
-    private Thread NEPE;
+    private int aps;
+    private int fps;
+    
+    private Thread HiloGraph;
     private static volatile boolean WORKING;
     
     public VentanaPrincipal(){
@@ -42,9 +45,62 @@ public class VentanaPrincipal extends Canvas implements Runnable{
         Ventana.setVisible(true);
     }
     
+    private void actualizar(){
+        aps++;
+    }
+    
+    private void mostrar(){
+        fps++;
+    }
+    
+    public synchronized void iniciar(){
+        WORKING = true;
+        HiloGraph = new Thread(this,"Graficos");
+        HiloGraph.start();
+    }
+    public synchronized void detener(){
+        WORKING = false;
+        try {
+            HiloGraph.join();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     @Override
     public void run() {
+        final int NS_POR_SEGUNDO = 1000000000;
+        final byte APS_OBJETIVO = 60;
+        final double NS_POR_ACTUALIZACION = NS_POR_SEGUNDO / APS_OBJETIVO;
         
+        long referenciaActualizacion = System.nanoTime();
+        long referenciaContador = System.nanoTime();
+        double tiempoTranscurrido;
+        double delta =0;
+        
+        requestFocus();
+        
+        while(WORKING){
+            final long inicioBucle = System.nanoTime();
+            tiempoTranscurrido = inicioBucle - referenciaActualizacion;
+            referenciaActualizacion = inicioBucle;
+            delta += tiempoTranscurrido/NS_POR_ACTUALIZACION;
+            
+            while(delta >=1){
+                actualizar();
+                delta --;
+            }
+            mostrar();
+            if(System.nanoTime()-referenciaContador > NS_POR_SEGUNDO){
+                
+                Ventana.setTitle(TITLE + " || APS: " + aps + " || FPS: "+fps);
+                
+                aps=0;
+                fps=0;
+                referenciaContador= System.nanoTime();
+            }
+        }
+    
     }
     
 }
