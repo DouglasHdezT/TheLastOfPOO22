@@ -31,6 +31,10 @@ public class ColeccionSprites {
             ex.printStackTrace();
         }
     }
+
+    public int getAncho() {
+        return Ancho;
+    }
     
     
 }
